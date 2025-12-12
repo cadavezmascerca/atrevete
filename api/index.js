@@ -9,8 +9,8 @@ export default function handler(req, res) {
 
   const { user, pass } = req.body;
 
-  const usuarioCorrecto = "admin";  // puedes cambiarlo si quieres
-  const claveReal = process.env.SECRETO;
+  const usuarioCorrecto = "valiente";  // AHORA EL USUARIO ES "valiente"
+  const claveReal = process.env.SECRETO;  // CONTRASEÑA = valiente
 
   if (user === usuarioCorrecto && pass === claveReal) {
     return res.json({ message: "Acceso concedido" });
