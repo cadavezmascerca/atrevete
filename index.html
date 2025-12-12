@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>ATRÉVETE A NO TENER MIEDO.</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, rgba(10,10,25,1), rgba(5,5,15,1));
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Líneas de fondo animadas */
+body::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255,0,0,0.12) 0px,
+        rgba(255,0,0,0.12) 2px,
+        transparent 2px,
+        transparent 10px
+    );
+    animation: moveLines 25s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes moveLines {
+    0% { transform: translate(0,0); }
+    100% { transform: translate(10%,10%); }
+}
+
+.contenedor {
+    background: rgba(20,20,40,0.6);
+    backdrop-filter: blur(8px);
+    padding: 50px;
+    border-radius: 12px;
+    box-shadow: 0 0 35px rgba(255,0,0,0.35);
+    text-align: center;
+    width: 350px;
+}
+
+h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 36px;
+    color: red;
+    text-shadow: 0 0 10px rgba(255,0,0,0.8);
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    color: white;
+    margin-bottom: 6px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+}
+
+input {
+    width: 85%;
+    padding: 10px;
+    margin-bottom: 16px;
+    border: none;
+    border-radius: 6px;
+    background: rgba(50,50,70,0.85);
+    color: red;
+    text-shadow: 0 0 4px rgba(255,0,0,0.7);
+    font-size: 16px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+button {
+    margin-top: 20px;
+    padding: 16px 28px;
+    background-color: #002a5c;
+    border: none;
+    border-radius: 8px;
+    font-size: 19px;
+    color: red;
+    cursor: pointer;
+    font-family: 'Cinzel Decorative', serif;
+    text-shadow: 0 0 7px rgba(255,0,0,0.9);
+    box-shadow: 0 0 18px rgba(255,0,0,0.6), inset 0 0 10px rgba(255,0,0,0.4);
+    transition: 0.3s ease;
+}
+
+button:hover {
+    background-color: #003a7c;
+    box-shadow: 0 0 30px rgba(255,0,0,0.8), inset 0 0 15px rgba(255,0,0,0.5);
+}
+
+.pista {
+    margin-top: 45px;
+    font-size: 14px;
+    color: #001530;
+    user-select: text;
+    text-align: center;
+    white-space: pre-wrap;
+    min-height: 40px;
+}
+
+/* Botón pequeño para mostrar pista */
+#verPistaBtn {
+    margin-top: 25px;
+    background:#220000;
+    padding:8px 18px;
+    font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="musica" src="https://files.catbox.moe/7mggy0.mp3"></audio>
+
+<div class="contenedor">
+
+<h1>ATRÉVETE A NO TENER MIEDO.</h1>
+
+<label>USUARIO</label>
+<input type="text" id="usuario">
+
+<label>CONTRASEÑA</label>
+<input type="password" id="password">
+
+<button onclick="comprobar()">COMPROBAR</button>
+
+<button id="verPistaBtn" onclick="mostrarPista()">VER PISTA</button>
+
+<div class="pista" id="pistaTexto"></div>
+
+</div>
+
+<script>
+const binario = 
+"01101000 01110100 01110100 01110000 01110011 00111010 00101111 00101111 01111001 01101111 01110101 01110100 01110101 00101110 01100010 01100101 00101111 01101000 01001000 01010111 01110110 00110100 01010000 01110000 01101110 01100100 01110101 01001001";
+
+let escribiendo = false;
+
+function mostrarPista(){
+    if (escribiendo) return;
+    escribiendo = true;
+
+    let i = 0;
+    const salida = document.getElementById("pistaTexto");
+    salida.textContent = "";
+
+    const intervalo = setInterval(() => {
+        salida.textContent += binario[i];
+        i++;
+        if (i >= binario.length) clearInterval(intervalo);
+    }, 25);
+
+    document.getElementById("musica").play();
+}
+
+async function comprobar(){
+    const user = document.getElementById("usuario").value;
+    const pass = document.getElementById("password").value;
+
+    try {
+        const resp = await fetch('/api/index', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user, pass })
+        });
+
+        const data = await resp.json();
+
+        alert(data.message);
+
+    } catch (err) {
+        alert('Error de conexión');
+    }
+}
+</script>
+
+</body>
+</html>
